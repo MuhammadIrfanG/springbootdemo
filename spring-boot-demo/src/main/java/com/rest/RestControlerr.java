@@ -16,11 +16,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.rest.Employee;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @RestController
+@RequestMapping(value="/resources")
 public class RestControlerr {
 	@Autowired
     EmployeeService empService; 
  
-    @RequestMapping(value = "/getAllEmployee", method = RequestMethod.GET)
+    @RequestMapping(value = "/employee", method = RequestMethod.GET)
     public ResponseEntity<List<Employee>> getAllEmployees() {
         List<Employee> employees = empService.findAllEmployees();
         if (employees.isEmpty()) {
@@ -29,7 +30,7 @@ public class RestControlerr {
         return new ResponseEntity<List<Employee>>(employees, HttpStatus.OK);
     }
  
-    @RequestMapping(value = "/getEmployeeById/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/employee/{id}", method = RequestMethod.GET)
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") long id) {
         Employee employee = empService.findById(id);
         if (employee == null) {
@@ -39,7 +40,7 @@ public class RestControlerr {
         return new ResponseEntity<Employee>(employee, HttpStatus.OK);
     }
  
-    @RequestMapping(value = "/createEmployee", method = RequestMethod.POST)
+    @RequestMapping(value = "/employee", method = RequestMethod.POST)
     public ResponseEntity<String> createEmployee(@RequestBody Employee employee, UriComponentsBuilder ucBuilder) {
         if (empService.isEmployeeExist(employee)) {
             return new ResponseEntity(new CustomError("A Employee with name " + 
@@ -51,11 +52,11 @@ public class RestControlerr {
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
  
-    @RequestMapping(value = "/updateEmployeeById/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/employee/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Employee> updateEmployee(@PathVariable("id") long id, @RequestBody Employee employee) {
         Employee currentEmployee = empService.findById(id);
         if (currentEmployee == null) {
-            return new ResponseEntity(new CustomError("Unable to upate. Employee with id " + id + " not found."),
+            return new ResponseEntity(new CustomError("Unable to update. Employee with id " + id + " not found."),
                     HttpStatus.NOT_FOUND);
         }
         currentEmployee.setName(employee.getName());
@@ -63,7 +64,7 @@ public class RestControlerr {
         return new ResponseEntity<Employee>(currentEmployee, HttpStatus.OK);
     }
  
-	@RequestMapping(value = "/deleteEmployeeById/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/employee/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Employee> deleteEmployee(@PathVariable("id") long id) {
         Employee employee = empService.findById(id);
         if (employee == null) {
